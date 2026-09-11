@@ -1,0 +1,10 @@
+/*
+ * Admin panel style overrides for Alert Eye Electronics.
+ * Keep any rules here inside @layer payload so they don't outrank
+ * Payload's own theme variables (unlayered rules beat layered ones).
+ */
+@layer payload {
+  .template-minimal .template-minimal__wrap {
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,35 @@
+# Alert Eye Electronics — reverse proxy + automatic HTTPS.
+# Caddy fetches and renews Let's Encrypt certificates on its own; the only
+# requirement is that {$DOMAIN} resolves to this VM and ports 80/443 are open.
+{
+	email {$ACME_EMAIL}
+	# Uncomment to test against the Let's Encrypt staging CA (avoids rate limits):
+	# acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Payload admin + API and the storefront are one app.
+	# (Payload caps uploads at 8 MB itself; Caddy streams request bodies.)
+	reverse_proxy app:3000
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	log {
+		output file /data/access.log {
+			roll_size 10MB
+			roll_keep 5
+		}
+	}
+}
+
+# Redirect the bare apex/www variants if you point them here too.
+# www.{$DOMAIN} {
+# 	redir https://{$DOMAIN}{uri} permanent
+# }
