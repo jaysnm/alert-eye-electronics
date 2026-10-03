@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { getSiteSettings, getNavCategories } from '@/lib/queries'
 import { Header } from '@/components/site/Header'
@@ -28,6 +30,8 @@ export default async function FrontendLayout({ children }: { children: React.Rea
         <main className="min-h-[60vh]">{children}</main>
         <Footer settings={settings} navCategories={navCategories} />
         <WhatsAppButton phone={settings.whatsapp} />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
